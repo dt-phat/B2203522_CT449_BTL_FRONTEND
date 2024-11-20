@@ -80,7 +80,7 @@ export default {
             console.log(duration.value);
             await createBorrowings({ book: props.book._id, duration: Number(duration.value) });
 
-            // window.location.reload();
+            window.location.reload();
 
         };
         return {
