@@ -50,7 +50,7 @@
                     <button class="btn btn-edit btn-sm me-2 fs-6 fw-normal" @click="editPublisher(publisher._id)"
                         data-bs-toggle="modal" data-bs-target="#updatePublisher">Edit</button>
                     <button class="btn btn-danger btn-sm fs-6 fw-normal"
-                        @click="deleteChoosePublisher(publisher._id)">Delete</button>
+                        @click="deleteChoosePublisher(publisher._id, publisher.name)">Delete</button>
                 </div>
             </li>
         </ul>
@@ -122,9 +122,11 @@ export default {
             window.location.reload();
         }
 
-        const deleteChoosePublisher = async (publisherId) => {
-            await deletePublisher(publisherId);
-            window.location.reload();
+        const deleteChoosePublisher = async (publisherId, publisherName) => {
+            if (confirm(`Do you want to delete "${publisherName}"?`)) {
+                await deletePublisher(publisherId);
+                window.location.reload();
+            }
         }
         return {
             publishers,

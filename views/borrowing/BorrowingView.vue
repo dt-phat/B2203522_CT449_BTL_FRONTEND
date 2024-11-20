@@ -1,8 +1,8 @@
 <template>
     <div class="container">
         <!-- Navbar -->
-        <div class="navbar-brand text-dark fw-normal fs-2 fw-bold">Borrowed Book List</div>
-        <div class="d-flex justify-content-center align-items-center">
+        <div class="navbar-brand text-dark fw-normal fs-1 fw-bold mt-2">Borrowed Book List</div>
+        <div class="d-flex justify-content-center align-items-center mt-4">
             <ul class="navbar-nav ms-auto d-flex flex-row m-auto">
                 <li class="nav-item">
                     <button class="nav-link text-primary fs-6 fw-normal" :class="{ active: activeItem === 'all' }"
@@ -21,9 +21,14 @@
                     <button class="nav-link text-primary fs-6 fw-normal" :class="{ active: activeItem === 'returned' }"
                         @click="setActive('returned')">Returned</button>
                 </li>
+                <li class="nav-item">
+                    <button class="nav-link text-primary fs-6 fw-normal text-danger"
+                        :class="{ 'active-overdue': activeItem === 'overdue' }"
+                        @click="setActive('overdue')">Overdue</button>
+                </li>
             </ul>
             <form class="d-flex justify-content-center custom-gap-0" @submit.prevent="handleSearch">
-                <input class="form-control me-4 search-input" type="search" placeholder="Enter user name ..."
+                <input class="form-control me-4 search-input" type="search" placeholder="User name ..."
                     aria-label="Search" v-model="searchText">
                 <button class="btn btn-search">Search</button>
             </form>
@@ -79,8 +84,8 @@ export default {
 
         const sortBorrowings = () => {
             borrowings.value.sort((a, b) => {
-                if (a.requestDate > b.requestDate) return -1;
-                if (a.requestDate < b.requestDate) return 1;
+                if (a.requestDate < b.requestDate) return -1;
+                if (a.requestDate > b.requestDate) return 1;
                 return 0;
             });
         };
@@ -110,6 +115,11 @@ export default {
 
 .active {
     background-color: #0d6efd !important;
+    color: white !important;
+}
+
+.active-overdue {
+    background-color: #dc3545 !important;
     color: white !important;
 }
 

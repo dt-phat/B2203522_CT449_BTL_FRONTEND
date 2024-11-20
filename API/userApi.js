@@ -40,7 +40,7 @@ export const updateUser = async (data) => {
 
 export const updateUserPassword = async (data) => {
     try {
-        const response = await axiosInstance.patch('/updateUserPassword', data);
+        const response = (await axiosInstance.patch('/updateUserPassword', data)).data;
         return response;
     } catch (error) {
         console.log(error);

@@ -6,15 +6,15 @@
         <form @submit.prevent="handleCreateBook" @change="handleFileUpload">
             <div class="mb-3">
                 <label for="title" class="form-label">Title:</label>
-                <input type="text" v-model="book.title" class="form-control" required />
+                <input type="text" v-model="book.title" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="price" class="form-label">Price:</label>
-                <input type="number" v-model="book.price" class="form-control" required />
+                <input type="number" v-model="book.price" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="quantity" class="form-label">Quantity:</label>
-                <input type="number" v-model="book.quantity" class="form-control" required />
+                <input type="number" v-model="book.quantity" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="publicationYear" class="form-label">Publication Year:</label>
@@ -35,10 +35,16 @@
                 <label for="image" class="form-label">Image:</label>
                 <input type="file" @change="handleFileUpload" class="form-control" />
             </div>
+            <!-- Error message -->
+            <div v-if="errorMessage" class="mt-2">
+                <p class="alert alert-danger">{{ errorMessage }}</p>
+            </div>
+            <!-- Button -->
             <div class="mt-4">
                 <button type="button" class="btn ms-3 btn-secondary fs-6 btn-sm ms-3"
                     @click.prevent="handleExit">Exit</button>
-                <button type="submit" class="btn btn-primary btn-sm ms-3 fs-6">Update Book</button>
+                <button type="submit" class="btn btn-primary btn-sm ms-3 fs-6">
+                    Create Book</button>
             </div>
         </form>
     </div>
@@ -61,6 +67,7 @@ export default {
             author: '',
             image: null,
         });
+        const errorMessage = ref('');
         const publishers = ref([]);
 
         const handleFileUpload = (event) => {
@@ -71,17 +78,43 @@ export default {
             }
         };
 
-        const handleCreateBook = async () => {
-            const data = {
-                title: book.value.title,
-                price: book.value.price,
-                quantity: book.value.quantity,
-                image: book.value.image,
-                file: book.value.file,
+        const validateForm = () => {
+            errorMessage.value = '';
+            if (!book.value.title) {
+                errorMessage.value = 'Please provide book title';
+                return false;
+            } else if (book.value.title.length > 100) {
+                errorMessage.value = 'Name can not be more than 100 characters';
+                return false;
             }
-            const result = await createBook(data);
-            await uploadBookImage(data.file);
-            console.dir(result);
+            if (!book.value.price) {
+                errorMessage.value = 'Please provide book price';
+                return false;
+            }
+            if (!book.value.quantity) {
+                errorMessage.value = 'Please provide quantity';
+                return false;
+            }
+            if (!book.value.file) {
+                errorMessage.value = 'Please provide book image';
+                return false;
+            }
+            return (!errorMessage.value);
+        }
+
+        const handleCreateBook = async () => {
+            if (validateForm()) {
+                const data = {
+                    title: book.value.title,
+                    price: book.value.price,
+                    quantity: book.value.quantity,
+                    image: book.value.image,
+                    file: book.value.file,
+                }
+                await createBook(data);
+                await uploadBookImage(data.file);
+                router.push('/books');
+            }
         };
 
         const handleExit = () => {
@@ -90,7 +123,6 @@ export default {
 
         onMounted(async () => {
             publishers.value = await getAllPublishers();
-            console.log(publishers);
         });
 
         return {
@@ -99,6 +131,7 @@ export default {
             book,
             handleExit,
             publishers,
+            errorMessage,
         };
     },
 };

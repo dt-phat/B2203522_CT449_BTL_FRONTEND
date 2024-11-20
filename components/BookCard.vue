@@ -16,13 +16,55 @@
                 :to="{ name: 'edit-book', params: { id: book._id } }">Edit</router-link>
             <router-link class="btn btn-primary btn-sm fs-6 fw-normal"
                 :to="{ name: 'bookdetails', params: { id: book._id } }">Details</router-link>
-            <button :disabled="book.quantity < 1" class="btn btn-borrow btn-sm fs-6 fw-normal"
-                @click="handleBorrow">Borrow</button>
+            <!-- Button trigger modal -->
+            <button :disabled="book.quantity < 1" class="btn btn-borrow btn-sm fs-6 fw-normal" data-bs-toggle="modal"
+                :data-bs-target="'#' + book._id">Borrow</button>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade " :id="book._id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Book Borrow Confirmation</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-0">
+                            <label class="form-label"><strong>Title:</strong></label>
+                            <p class="form-control-plaintext mt-0">{{ book.title }}</p>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label"><strong>Author:</strong></label>
+                            <p class="form-control-plaintext">{{ book.author }}</p>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label"><strong>Price:</strong></label>
+                            <p class="form-control-plaintext">{{ book.price }}</p>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label"><strong>Quantity:</strong></label>
+                            <p class="form-control-plaintext">{{ book.quantity }}</p>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label"><strong>Quantity:</strong></label>
+                            <input type="number" min="1" max="90" class="form-control" v-model="duration">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="handleBorrow">Borrow</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End modal -->
     </div>
 </template>
 
 <script>
+import { ref } from 'vue';
 import { useAuthStore } from '../stores/authStore';
 import { createBorrowings } from '../API/borrowingApi';
 export default {
@@ -32,15 +74,19 @@ export default {
     setup(props) {
         const authStore = useAuthStore();
         const user = authStore.user;
+        const duration = ref(8);
+
         const handleBorrow = async () => {
-            if (confirm(`Do you want to order "${props.book.title}"?`)) {
-                await createBorrowings({ book: props.book._id });
-                window.location.reload();
-            }
+            console.log(duration.value);
+            await createBorrowings({ book: props.book._id, duration: Number(duration.value) });
+
+            // window.location.reload();
+
         };
         return {
             user,
             handleBorrow,
+            duration,
         };
     },
 }
@@ -112,6 +158,24 @@ button:disabled {
 
 hr {
     margin: 0;
+    margin-bottom: 5px;
+}
+
+.book-info-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 15px;
+}
+
+.book-info {
+    margin-bottom: 10px;
+}
+
+.book-info label {
+    font-weight: bold;
+}
+
+.book-info p {
     margin-bottom: 5px;
 }
 </style>

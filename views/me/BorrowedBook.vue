@@ -1,9 +1,9 @@
 <template>
-    <div class="container">
+    <div class="container p-2">
         <!-- Navbar -->
-        <div class="d-flex justify-content-center align-items-center">
-            <div class="navbar-brand text-dark fw-normal fs-2 fw-bold">Borrowed Books</div>
-            <ul class="navbar-nav ms-auto d-flex flex-row m-auto">
+        <div>
+            <div class="navbar-brand text-dark fw-normal fs-1 fw-bold">Borrowed Books</div>
+            <ul class="navbar-nav ms-auto d-flex flex-row ms-auto justify-content-center mt-3">
                 <li class="nav-item">
                     <button class="nav-link text-primary fs-6 fw-normal" :class="{ active: activeItem === 'all' }"
                         @click="setActive('all')">All</button>
@@ -21,13 +21,32 @@
                     <button class="nav-link text-primary fs-6 fw-normal" :class="{ active: activeItem === 'returned' }"
                         @click="setActive('returned')">Returned</button>
                 </li>
+                <li class="nav-item">
+                    <button class="nav-link text-primary fs-6 fw-normal text-danger"
+                        :class="{ 'active-overdue': activeItem === 'overdue' }"
+                        @click="setActive('overdue')">Overdue</button>
+                </li>
             </ul>
         </div>
         <div v-if="borrowings.length" class="mt-2">
             <BorrowedBookCard v-for="borrowing in borrowings" :borrowing="borrowing" class="borrow-card" />
         </div>
-        <div v-else class="alert alert-dark text-center bg-white mt-2">
-            <p class="fs-6">No books have been borrowed.</p>
+        <div v-else class="mt-4">
+            <div v-if="activeItem === 'processing'" class="alert alert-info text-center">
+                No books have been requested.
+            </div>
+            <div v-else-if="activeItem === 'borrowed'" class="alert alert-info text-center">
+                No books have been borrowed.
+            </div>
+            <div v-else-if="activeItem === 'returned'" class="alert alert-info text-center">
+                No books have been returned.
+            </div>
+            <div v-else-if="activeItem === 'overdue'" class="alert alert-info text-center">
+                No books are overdue.
+            </div>
+            <div v-else class="alert alert-info text-center">
+                You currently have no books in your list.
+            </div>
         </div>
     </div>
 </template>
@@ -79,6 +98,15 @@ export default {
 .active {
     background-color: #0d6efd !important;
     color: white !important;
+}
+
+.active-overdue {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+.nav-item {
+    width: 150px;
 }
 
 .navbar-nav .nav-link:hover {

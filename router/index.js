@@ -9,6 +9,9 @@ import userRoutes from "./user";
 import publisherRoutes from './publisher';
 import borrowingRoutes from './borrowing';
 
+// not found
+import NotFound from '../views/notFound/NotFound.vue';
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -19,6 +22,11 @@ const router = createRouter({
         ...userRoutes,
         ...publisherRoutes,
         ...borrowingRoutes,
+        {
+            path: '/:catchAll(.*)',
+            name: 'NotFound',
+            component: NotFound,
+        },
     ],
 });
 

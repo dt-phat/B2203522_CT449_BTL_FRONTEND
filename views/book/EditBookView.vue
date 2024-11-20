@@ -6,15 +6,15 @@
         <form @submit.prevent="updateBook" @change="handleFileUpload">
             <div class="mb-3">
                 <label for="title" class="form-label">Title:</label>
-                <input type="text" v-model="book.title" class="form-control" required />
+                <input type="text" v-model="book.title" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="price" class="form-label">Price:</label>
-                <input type="number" v-model="book.price" class="form-control" required />
+                <input type="number" v-model="book.price" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="quantity" class="form-label">Quantity:</label>
-                <input type="number" v-model="book.quantity" class="form-control" required />
+                <input type="number" v-model="book.quantity" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="publicationYear" class="form-label">Publication Year:</label>
@@ -31,6 +31,10 @@
             <div class="mb-3">
                 <label for="author" class="form-label">Author:</label>
                 <input type="text" v-model="book.author" class="form-control" />
+            </div>
+            <!-- Error message -->
+            <div v-if="errorMessage" class="mt-2">
+                <p class="alert alert-danger">{{ errorMessage }}</p>
             </div>
             <div class="mb-3">
                 <label for="image" class="form-label">Image:</label>
@@ -66,6 +70,8 @@ export default {
         });
         const publishers = ref([]);
 
+        const errorMessage = ref('');
+
         const handleFileUpload = (event) => {
             const files = event.target.files;
             if (files && files.length > 0) {
@@ -74,23 +80,44 @@ export default {
             }
         };
 
-        const handleUpdateBook = async () => {
-            const data = {
-                title: book.value.title,
-                price: book.value.price,
-                quantity: book.value.quantity,
-                publisher: book.value.publisher,
-                author: book.value.author,
-                file: book.value.file,
+        const validateForm = () => {
+            errorMessage.value = '';
+            if (!book.value.title) {
+                errorMessage.value = 'Please provide book title';
+                return false;
+            } else if (book.value.title.length > 100) {
+                errorMessage.value = 'Name can not be more than 100 characters';
+                return false;
             }
-            console.log(book.value.file);
-            if (book.value.file) {
-                data.image = book.value.image;
+            if (!book.value.price) {
+                errorMessage.value = 'Please provide book price';
+                return false;
             }
+            if (!book.value.quantity) {
+                errorMessage.value = 'Please provide quantity';
+                return false;
+            }
+            return (!errorMessage.value);
+        }
 
-            const result = await updateBook(book.value._id, data);
-            await uploadBookImage(data.file);
-            router.push('/books');
+        const handleUpdateBook = async () => {
+            if (validateForm()) {
+                const data = {
+                    title: book.value.title,
+                    price: book.value.price,
+                    quantity: book.value.quantity,
+                    publisher: book.value.publisher,
+                    author: book.value.author,
+                    file: book.value.file,
+                }
+                if (book.value.file) {
+                    data.image = book.value.image;
+                }
+
+                const result = await updateBook(book.value._id, data);
+                await uploadBookImage(data.file);
+                router.push('/books');
+            }
         };
 
         onMounted(async () => {
@@ -103,6 +130,7 @@ export default {
             handleFileUpload,
             book,
             publishers,
+            errorMessage,
         };
     },
 };

@@ -31,6 +31,9 @@ export default {
         const authStore = useAuthStore();
         const allBooks = ref([]);
         const books = ref([]);
+        const user = ref({});
+
+        user.value = authStore.user;
 
         onMounted(async () => {
             allBooks.value = await getAllBooks();
@@ -45,7 +48,7 @@ export default {
 
         return {
             books,
-            user: useAuthStore.user,
+            user,
             textSearch,
             handleSearch,
         };
