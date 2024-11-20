@@ -2,7 +2,7 @@
     <div class="profile-container">
         <h1>User Profile</h1>
         <div class="profile-item">
-            <label>Username:</label>
+            <label>User name:</label>
             <span>{{ user.username }}</span>
         </div>
         <div class="profile-item">
@@ -20,6 +20,10 @@
         <div class="profile-item">
             <label>Gender:</label>
             <span>{{ user.gender }}</span>
+        </div>
+        <div class="profile-item" v-if="user.birthday">
+            <label>Birth day:</label>
+            <span>{{ formatDate(user.birthday) }}</span>
         </div>
         <div class="profile-item">
             <label>Position:</label>
@@ -100,7 +104,10 @@ export default {
             if (response.value.msg !== 'Invalid Credentials') {
                 window.location.reload();
             }
-        }
+        };
+        const formatDate = (date) => {
+            return new Date(date).toLocaleDateString();
+        };
         onMounted(async () => {
             user.value = (await showMe()).data.user;
         });
@@ -112,6 +119,7 @@ export default {
             newPassword,
             oldPassword,
             response,
+            formatDate,
         };
     },
 };

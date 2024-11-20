@@ -32,6 +32,10 @@
                 <input type="text" id="gender" v-model="user.gender" readonly class="readonly" />
             </div>
             <div class="form-group">
+                <label for="birthday">Birth Day:</label>
+                <input type="date" id="position" v-model="user.birthday" readonly class="readonly" />
+            </div>
+            <div class="form-group">
                 <label for="position">Position:</label>
                 <input type="text" id="position" v-model="user.position" readonly class="readonly" />
             </div>

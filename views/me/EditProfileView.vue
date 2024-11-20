@@ -26,7 +26,14 @@
             </div>
             <div class="form-group">
                 <label for="gender">Gender:</label>
-                <input type="text" id="gender" v-model="user.gender" />
+                <select name="gender" id="gender" v-model="user.gender" class="form-select">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="birthday">Birth Day:</label>
+                <input type="date" id="position" v-model="user.birthday" />
             </div>
             <div class="form-group">
                 <label for="position">Position:</label>
@@ -68,6 +75,7 @@ export default {
                 firstname: user.value.firstname,
                 lastname: user.value.lastname,
                 gender: user.value.gender,
+                birthday: user.value.birthday,
                 position: user.value.position,
                 address: user.value.address,
                 phoneNumber: user.value.phoneNumber,

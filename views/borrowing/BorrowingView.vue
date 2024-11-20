@@ -2,7 +2,8 @@
     <div class="container">
         <!-- Navbar -->
         <div class="d-flex align-items-center">
-            <div class="navbar-brand text-dark fw-normal fs-1 fw-bold mt-2">Borrowed Book List</div>
+            <div class="navbar-brand text-dark fw-normal fs-1 fw-bold mt-2 head" @click="reload">Borrowed Book List
+            </div>
             <form class="d-flex justify-content-center custom-gap-0 ms-auto mt-2" @submit.prevent="handleSearch">
                 <input class="form-control me-4 search-input" type="search" placeholder="Enter user name ..."
                     aria-label="Search" v-model="searchText">
@@ -106,6 +107,10 @@ export default {
             });
         };
 
+        const reload = () => {
+            window.location.reload();
+        }
+
         return {
             borrowings,
             setActive,
@@ -113,12 +118,17 @@ export default {
             handleSearch,
             activeItem,
             searchText,
+            reload,
         };
     },
 };
 </script>
 
 <style scoped>
+.head {
+    cursor: pointer;
+}
+
 .btn-search,
 .search-input {
     height: 40px;

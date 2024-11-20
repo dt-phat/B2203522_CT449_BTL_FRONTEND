@@ -13,6 +13,10 @@
             <label>Role:</label>
             <span>{{ user.role }}</span>
         </div>
+        <div class="profile-item" v-if="user.birthday">
+            <label>Birth day:</label>
+            <span>{{ formatDate(user.birthday) }}</span>
+        </div>
         <div class="profile-item">
             <label>Position:</label>
             <span>{{ user.position }}</span>
@@ -53,9 +57,13 @@ export default {
         const handleExit = () => {
             router.push('/users');
         };
+        const formatDate = (date) => {
+            return new Date(date).toLocaleDateString();
+        };
         return {
             user,
             handleExit,
+            formatDate,
         }
     }
 }
