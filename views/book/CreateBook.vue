@@ -10,11 +10,11 @@
             </div>
             <div class="mb-3">
                 <label for="price" class="form-label">Price:</label>
-                <input type="number" v-model="book.price" class="form-control" />
+                <input type="number" min="0" v-model="book.price" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="quantity" class="form-label">Quantity:</label>
-                <input type="number" v-model="book.quantity" class="form-control" />
+                <input type="number" min="0" v-model="book.quantity" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="publicationYear" class="form-label">Publication Year:</label>
@@ -22,8 +22,9 @@
             </div>
             <div class="mb-3">
                 <label for="publisher" class="form-label">Publisher:</label>
-                <select name="publisher" id="publisher" class="form-select">
-                    <option v-for="publisher in publishers" :value="publisher._id">
+                <select name="publisher" id="publisher" class="form-select" v-model="book.publisher">
+                    <option value=""></option>
+                    <option v-for="publisher in publishers" :value="publisher">
                         {{ publisher.name + " " + publisher.address }}</option>
                 </select>
             </div>
@@ -108,6 +109,8 @@ export default {
                     title: book.value.title,
                     price: book.value.price,
                     quantity: book.value.quantity,
+                    publisher: book.value.publisher._id,
+                    author: book.value.author,
                     image: book.value.image,
                     file: book.value.file,
                 }

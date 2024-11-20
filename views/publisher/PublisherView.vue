@@ -8,7 +8,8 @@
             </div>
             <div>
                 <!-- Button -->
-                <button class="btn btn-create me-2" data-bs-toggle="modal" data-bs-target="#createPublisher">
+                <button class="btn btn-create me-2" data-bs-toggle="modal" data-bs-target="#createPublisher"
+                    @click="handleClick">
                     <i class="fa-solid fa-plus"></i>
                     Add Publisher</button>
                 <!-- Model -->
@@ -26,6 +27,9 @@
                                 <input type="text" v-model="newPublisherName" class="form-control mb-3" id="name">
                                 <label for="address">Address</label>
                                 <input type="text" v-model="newPublisherAddress" class="form-control mb-3" id="address">
+                                <div v-if="errorMessage" class="mt-2">
+                                    <p class="alert alert-danger custom-alert p-2">{{ errorMessage }}</p>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -41,7 +45,7 @@
         <ul class="list-group mt-2">
             <li class="list-group-item d-flex justify-content-between align-items-center"
                 v-for="publisher in publishers" :key="publisher._id">
-                <div>
+                <div class="d-flex justify-content-center">
                     <span class="fw-bold publisher-name">{{ publisher.name }}</span>
                     <span class="text-muted publisher-address">{{ publisher.address }}</span>
                 </div>
@@ -69,6 +73,9 @@
                         <label for="updateAddress">Address</label>
                         <input type="text" v-model="updatePublisherAddress" class="form-control mb-3"
                             id="updateAddress">
+                        <div v-if="errorMessage" class="mt-2">
+                            <p class="alert alert-danger custom-alert p-2">{{ errorMessage }}</p>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -102,15 +109,28 @@ export default {
         const updatePublisherId = ref('');
         const updatePublisherInfo = ref({});
 
+        const errorMessage = ref('');
+
         onMounted(async () => {
             publishers.value = await getAllPublishers();
         });
 
         const addPublisher = async () => {
-            newPublisher.value = await createPublisher({ name: newPublisherName.value, address: newPublisherAddress.value });
-            window.location.reload();
+            if (!newPublisherName.value) {
+                errorMessage.value = "Please provide publisher name";
+                return;
+            }
+            else if (!newPublisherAddress.value) {
+                errorMessage.value = "Please provide publisher address";
+                return;
+            }
+            else {
+                newPublisher.value = await createPublisher({ name: newPublisherName.value, address: newPublisherAddress.value });
+                window.location.reload();
+            }
         }
         const editPublisher = async (publisherId) => {
+            errorMessage.value = '';
             updatePublisherInfo.value = await getSinglePublisher(publisherId);
             updatePublisherId.value = publisherId;
             updatePublisherName.value = updatePublisherInfo.value.name;
@@ -118,6 +138,14 @@ export default {
 
         }
         const comfirmSavePublisher = async () => {
+            if (!updatePublisherName.value) {
+                errorMessage.value = "Please provide publisher name";
+                return;
+            }
+            else if (!updatePublisherAddress.value) {
+                errorMessage.value = "Please provide publisher address";
+                return;
+            }
             await updatePublisher(updatePublisherId.value, { name: updatePublisherName.value, address: updatePublisherAddress.value });
             window.location.reload();
         }
@@ -127,6 +155,9 @@ export default {
                 await deletePublisher(publisherId);
                 window.location.reload();
             }
+        }
+        const handleClick = () => {
+            errorMessage.value = '';
         }
         return {
             publishers,
@@ -138,6 +169,8 @@ export default {
             editPublisher,
             comfirmSavePublisher,
             deleteChoosePublisher,
+            errorMessage,
+            handleClick,
         }
     }
 };

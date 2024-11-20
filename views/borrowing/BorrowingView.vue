@@ -1,7 +1,14 @@
 <template>
     <div class="container">
         <!-- Navbar -->
-        <div class="navbar-brand text-dark fw-normal fs-1 fw-bold mt-2">Borrowed Book List</div>
+        <div class="d-flex align-items-center">
+            <div class="navbar-brand text-dark fw-normal fs-1 fw-bold mt-2">Borrowed Book List</div>
+            <form class="d-flex justify-content-center custom-gap-0 ms-auto mt-2" @submit.prevent="handleSearch">
+                <input class="form-control me-4 search-input" type="search" placeholder="Enter user name ..."
+                    aria-label="Search" v-model="searchText">
+                <button class="btn btn-sm btn-search">Search</button>
+            </form>
+        </div>
         <div class="d-flex justify-content-center align-items-center mt-4">
             <ul class="navbar-nav ms-auto d-flex flex-row m-auto">
                 <li class="nav-item">
@@ -27,18 +34,27 @@
                         @click="setActive('overdue')">Overdue</button>
                 </li>
             </ul>
-            <form class="d-flex justify-content-center custom-gap-0" @submit.prevent="handleSearch">
-                <input class="form-control me-4 search-input" type="search" placeholder="User name ..."
-                    aria-label="Search" v-model="searchText">
-                <button class="btn btn-search">Search</button>
-            </form>
         </div>
         <!-- Search -->
         <div v-if="borrowings.length">
             <BorrowingCard v-for="borrowing in borrowings" :borrowing="borrowing" class="borrow-card" />
         </div>
-        <div v-else class="alert alert-dark text-center bg-white mt-2">
-            <p class="fs-6">No books have been borrowed.</p>
+        <div v-else class="mt-4">
+            <div v-if="activeItem === 'processing'" class="alert alert-info text-center">
+                No books have been requested.
+            </div>
+            <div v-else-if="activeItem === 'borrowed'" class="alert alert-info text-center">
+                No books have been borrowed.
+            </div>
+            <div v-else-if="activeItem === 'returned'" class="alert alert-info text-center">
+                No books have been returned.
+            </div>
+            <div v-else-if="activeItem === 'overdue'" class="alert alert-info text-center">
+                No books are overdue.
+            </div>
+            <div v-else class="alert alert-info text-center">
+                You currently have no books in your list.
+            </div>
         </div>
     </div>
 </template>
@@ -103,6 +119,11 @@ export default {
 </script>
 
 <style scoped>
+.btn-search,
+.search-input {
+    height: 40px;
+}
+
 .navbar-brand {
     color: #4921f3 !important;
 }

@@ -10,11 +10,11 @@
             </div>
             <div class="mb-3">
                 <label for="price" class="form-label">Price:</label>
-                <input type="number" v-model="book.price" class="form-control" />
+                <input type="number" min="0" v-model="book.price" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="quantity" class="form-label">Quantity:</label>
-                <input type="number" v-model="book.quantity" class="form-control" />
+                <input type="number" min="0" v-model="book.quantity" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="publicationYear" class="form-label">Publication Year:</label>
@@ -24,7 +24,7 @@
                 <label for="publisher" class="form-label">Publisher:</label>
                 <select name="publisher" v-model="book.publisher" id="publisher" class="form-select">
                     <option value=""></option>
-                    <option v-for="publisher in publishers" :value="publisher._id">{{
+                    <option v-for="publisher in publishers" :value="publisher">{{
                         publisher.name }} - {{ publisher.address }}</option>
                 </select>
             </div>
@@ -40,7 +40,10 @@
                 <label for="image" class="form-label">Image:</label>
                 <input type="file" @change="handleFileUpload" class="form-control" />
             </div>
-            <button type="submit" class="btn btn-primary" @click="handleUpdateBook">Update Book</button>
+            <div>
+                <router-link to="/books" class="btn btn-secondary">Exit</router-link>
+                <button type="submit" class="btn btn-primary ms-4" @click="handleUpdateBook">Update Book</button>
+            </div>
         </form>
     </div>
 </template>
@@ -106,7 +109,7 @@ export default {
                     title: book.value.title,
                     price: book.value.price,
                     quantity: book.value.quantity,
-                    publisher: book.value.publisher,
+                    publisher: book.value.publisher._id,
                     author: book.value.author,
                     file: book.value.file,
                 }

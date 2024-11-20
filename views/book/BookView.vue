@@ -2,7 +2,7 @@
     <div class="navbar-container mb-3 mt-8">
         <nav class="navbar navbar-light bg-light">
             <div class="container-fluid justify-content-end">
-                <h1 class="me-auto text-head fs-1 fw-bold">Book List</h1>
+                <h1 class="me-auto text-head fs-1 fw-bold" @click="reload">Book List</h1>
                 <router-link v-if="user?.role === 'admin' || user?.role === 'employee'" :to="{ name: 'create-book' }"
                     class="btn btn-create me-3 fs-6 fw-bold rounded-3">
                     <i class="fa-solid fa-plus"></i>
@@ -45,12 +45,16 @@ export default {
                 book.title.toLowerCase().includes(textSearch.value.toLowerCase())
             );
         };
+        const reload = () => {
+            window.location.reload();
+        }
 
         return {
             books,
             user,
             textSearch,
             handleSearch,
+            reload,
         };
     },
     components: {
@@ -61,6 +65,7 @@ export default {
 <style scoped>
 h1 {
     color: #4921f3;
+    cursor: pointer;
 }
 
 .btn-create {
