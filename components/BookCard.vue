@@ -48,7 +48,7 @@
                             <p class="form-control-plaintext">{{ book.quantity }}</p>
                         </div>
                         <div class="mb-0">
-                            <label class="form-label"><strong>Quantity:</strong></label>
+                            <label class="form-label"><strong>Duration:</strong></label>
                             <input type="number" min="1" max="90" class="form-control" v-model="duration">
                         </div>
                     </div>
